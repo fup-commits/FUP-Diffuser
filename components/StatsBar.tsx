@@ -20,13 +20,13 @@ const BreedItem = ({ breed, index, isMobileRight, isMobileBottom, isDesktopRight
         >
             {/* Image container */}
             <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100">
-                {/* Logic: If customImage exists AND hasn't errored, try to show it. Otherwise show GeneratedImage (which now uses Unsplash only). */}
+                {/* Logic: If customImage exists AND hasn't errored, try to show it. Otherwise show GeneratedImage (Unsplash fallback). */}
                 {breed.customImage && !imageError ? (
                     <img 
                         src={breed.customImage}
                         alt={breed.name}
                         className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                        onError={() => setImageError(true)} // If file not found, switch to fallback
+                        onError={() => setImageError(true)} 
                     />
                 ) : (
                     <GeneratedImage 
@@ -63,51 +63,55 @@ const BreedItem = ({ breed, index, isMobileRight, isMobileBottom, isDesktopRight
 };
 
 const StatsBar: React.FC = () => {
+    // 6 Scents Collection based on user provided images
     const breeds = [
         {
             id: 1,
             name: "The Doberman",
             country: "Germany",
             scent: "Black Pine / Leather",
-            prompt: "Extreme close-up portrait of a Doberman Pinscher face, intense gaze, glossy black and tan fur, blurred Berlin cityscape background with TV tower, dramatic red lighting, high contrast, cinematic 8k resolution.",
+            prompt: "Doberman Pinscher",
+            customImage: "/doberman01.png"
         },
         {
             id: 2,
-            name: "The Dalmatian",
-            country: "Croatia",
-            scent: "Sea Salt / Sage",
-            prompt: "Close-up portrait of a Dalmatian dog face, distinct black spots on white fur, elegant posture, blurred Dubrovnik coastal background with terracotta roofs and blue sea, bright daylight, high fashion photography, black and white aesthetic.",
+            name: "The Greyhound",
+            country: "Italy",
+            scent: "Warm Stone / Fig Leaf",
+            prompt: "Italian Greyhound",
+            customImage: "/greyhound01.png"
         },
         {
             id: 3,
-            name: "The Afghan",
-            country: "Afghanistan",
-            scent: "Saffron / Silk",
-            prompt: "Close-up portrait of an Afghan Hound, long silky flowing hair filling the frame, wind blowing, blurred golden hour desert mountain background, majestic and regal, highly detailed hair texture, warm monochrome.",
-        },
-        {
-            id: 4,
-            name: "The Akita",
-            country: "Japan",
-            scent: "Hinoki / Yuzu",
-            prompt: "Close-up face portrait of an Akita Inu, fluffy texture, loyal expression, snowflakes falling, blurred Tokyo neon street background at night with red neon lights, moody cinematic lighting, shallow depth of field.",
-        },
-        {
-            id: 5,
             name: "The Retriever",
             country: "Scotland",
             scent: "Golden Amber / Oat",
-            prompt: "Close-up side profile of a Golden Retriever looking right, cream-colored coat, noble and calm expression, blurred classical white domed architecture in background, soft overcast lighting, elegant and high-fashion aesthetic, sharp focus on eyes and nose.",
-            
-            // ✅ UPDATED: 요청하신대로 PNG로 변경!
-            customImage: "/golden01.png" 
+            prompt: "Golden Retriever",
+            customImage: "/golden01.png" // Already exists
+        },
+        {
+            id: 4,
+            name: "The Poodle",
+            country: "France",
+            scent: "Vetiver / Champagne",
+            prompt: "Standard Poodle White",
+            customImage: "/poodle01.png"
+        },
+        {
+            id: 5,
+            name: "The Shiba",
+            country: "Japan",
+            scent: "Hinoki / Toasted Rice",
+            prompt: "Shiba Inu",
+            customImage: "/shiba01.png"
         },
         {
             id: 6,
-            name: "The Bichon",
-            country: "France",
-            scent: "Cotton / White Musk",
-            prompt: "Close-up macro portrait of a Bichon Frise face, pure white fluffy curls texture like clouds, soft high-key lighting, minimalist luxury aesthetic, sharp focus on dark eyes, artistic photography."
+            name: "The Maltese",
+            country: "Malta",
+            scent: "Sea Salt / White Musk",
+            prompt: "Maltese Dog",
+            customImage: "/maltese01.png"
         }
     ];
 
