@@ -1,6 +1,66 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import GeneratedImage from './GeneratedImage';
+
+// Sub-component to handle individual breed logic and image fallbacks safely
+const BreedItem = ({ breed, index, isMobileRight, isMobileBottom, isDesktopRight, isDesktopBottom }: any) => {
+    const [imageError, setImageError] = useState(false);
+
+    return (
+        <div 
+            className={`
+                relative h-[600px] group overflow-hidden cursor-pointer border-white/20
+                ${isMobileRight ? 'border-r' : 'border-r-0'}
+                ${isMobileBottom ? 'border-b' : 'border-b-0'}
+                
+                md:border-r-0 md:border-b-0 
+                ${isDesktopRight ? 'md:border-r' : ''}
+                ${isDesktopBottom ? 'md:border-b' : ''}
+            `}
+        >
+            {/* Image container */}
+            <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100">
+                {/* Logic: If customImage exists AND hasn't errored, try to show it. Otherwise show GeneratedImage (which now uses Unsplash only). */}
+                {breed.customImage && !imageError ? (
+                    <img 
+                        src={breed.customImage}
+                        alt={breed.name}
+                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                        onError={() => setImageError(true)} // If file not found, switch to fallback
+                    />
+                ) : (
+                    <GeneratedImage 
+                        prompt={breed.prompt}
+                        alt={breed.name}
+                        aspectRatio="3:4"
+                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                    />
+                )}
+            </div>
+            
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90 transition-opacity duration-300"></div>
+            
+            {/* Text Overlay */}
+            <div className="absolute inset-0 p-8 flex flex-col justify-between">
+                <div className="self-start flex items-center gap-2">
+                    <span className="text-[9px] font-bold text-[#FF3333]">0{breed.id}</span>
+                    <span className="bg-white/10 backdrop-blur text-white text-[9px] font-bold px-3 py-1 uppercase tracking-widest border border-white/10">
+                        {breed.country}
+                    </span>
+                </div>
+
+                <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                    <p className="text-[9px] uppercase tracking-[0.2em] text-[#FF3333] mb-3 font-bold">{breed.scent}</p>
+                    <div className="flex justify-between items-end border-t border-white/20 pt-4">
+                        <h3 className="font-display text-3xl text-white uppercase leading-none tracking-tight">{breed.name}</h3>
+                        <ArrowUpRight className="text-white w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1 group-hover:translate-x-1 transition-all duration-300" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const StatsBar: React.FC = () => {
     const breeds = [
@@ -37,7 +97,10 @@ const StatsBar: React.FC = () => {
             name: "The Retriever",
             country: "Scotland",
             scent: "Golden Amber / Oat",
-            prompt: "Close-up portrait of a Golden Retriever face, warm golden hour lighting, soft flowing fur, friendly but noble expression, blurred Scottish highlands background, cinematic 8k resolution, nature tones.",
+            prompt: "Close-up side profile of a Golden Retriever looking right, cream-colored coat, noble and calm expression, blurred classical white domed architecture in background, soft overcast lighting, elegant and high-fashion aesthetic, sharp focus on eyes and nose.",
+            
+            // ✅ UPDATED: 요청하신대로 PNG로 변경!
+            customImage: "/golden01.png" 
         },
         {
             id: 6,
@@ -61,60 +124,25 @@ const StatsBar: React.FC = () => {
                     "A home fragrance as loyal as your shadow. Inspired by the world's most noble breeds."
                 </p>
             </div>
-            {/* Grid Layout: 2 cols on Mobile, 3 cols on Desktop for 6 items */}
+            
             <div className="grid grid-cols-2 md:grid-cols-3 w-full">
                 {breeds.map((breed, index) => {
                     // Border Logic
                     const isMobileRight = index % 2 === 0;
                     const isMobileBottom = index < breeds.length - 2; 
-
                     const isDesktopRight = index % 3 !== 2;
                     const isDesktopBottom = index < 3; 
 
                     return (
-                        <div 
-                            key={breed.id} 
-                            className={`
-                                relative h-[600px] group overflow-hidden cursor-pointer border-white/20
-                                ${isMobileRight ? 'border-r' : 'border-r-0'}
-                                ${isMobileBottom ? 'border-b' : 'border-b-0'}
-                                
-                                md:border-r-0 md:border-b-0 
-                                ${isDesktopRight ? 'md:border-r' : ''}
-                                ${isDesktopBottom ? 'md:border-b' : ''}
-                            `}
-                        >
-                            {/* Image container - Close up Dog Photography */}
-                            <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100">
-                                <GeneratedImage 
-                                    prompt={breed.prompt}
-                                    alt={breed.name}
-                                    aspectRatio="3:4"
-                                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                                />
-                            </div>
-                            
-                            {/* Gradient Overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90 transition-opacity duration-300"></div>
-                            
-                            {/* Text Overlay */}
-                            <div className="absolute inset-0 p-8 flex flex-col justify-between">
-                                <div className="self-start flex items-center gap-2">
-                                    <span className="text-[9px] font-bold text-[#FF3333]">0{breed.id}</span>
-                                    <span className="bg-white/10 backdrop-blur text-white text-[9px] font-bold px-3 py-1 uppercase tracking-widest border border-white/10">
-                                        {breed.country}
-                                    </span>
-                                </div>
-
-                                <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out">
-                                    <p className="text-[9px] uppercase tracking-[0.2em] text-[#FF3333] mb-3 font-bold">{breed.scent}</p>
-                                    <div className="flex justify-between items-end border-t border-white/20 pt-4">
-                                        <h3 className="font-display text-3xl text-white uppercase leading-none tracking-tight">{breed.name}</h3>
-                                        <ArrowUpRight className="text-white w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1 group-hover:translate-x-1 transition-all duration-300" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <BreedItem 
+                            key={breed.id}
+                            breed={breed}
+                            index={index}
+                            isMobileRight={isMobileRight}
+                            isMobileBottom={isMobileBottom}
+                            isDesktopRight={isDesktopRight}
+                            isDesktopBottom={isDesktopBottom}
+                        />
                     );
                 })}
             </div>
