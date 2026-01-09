@@ -1,11 +1,21 @@
-import React from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowUpRight, ImageOff, RefreshCw } from 'lucide-react';
 import GeneratedImage from './GeneratedImage';
 
-// Sub-component to handle individual breed logic
+// Sub-component to handle individual breed logic safely
 const BreedItem = ({ breed, index, isMobileRight, isMobileBottom, isDesktopRight, isDesktopBottom }: any) => {
-    // Removed onError state to force browser to try loading the user's custom image
-    
+    const [imgError, setImgError] = useState(false);
+    const [retryCount, setRetryCount] = useState(0);
+
+    const handleRetry = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setImgError(false);
+        setRetryCount(prev => prev + 1);
+    };
+
+    // Force cache bust on retry
+    const imgSrc = retryCount > 0 ? `${breed.customImage}?retry=${retryCount}` : breed.customImage;
+
     return (
         <div 
             className={`
@@ -19,29 +29,47 @@ const BreedItem = ({ breed, index, isMobileRight, isMobileBottom, isDesktopRight
             `}
         >
             {/* Image container */}
-            <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100">
-                {/* Logic: Strictly use customImage if available. No automatic fallback to GeneratedImage on error. */}
-                {breed.customImage ? (
+            <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100 bg-[#111]">
+                {!imgError ? (
                     <img 
-                        src={breed.customImage}
+                        src={imgSrc}
                         alt={breed.name}
                         className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                        onError={() => setImgError(true)}
                     />
                 ) : (
-                    <GeneratedImage 
-                        prompt={breed.prompt}
-                        alt={breed.name}
-                        aspectRatio="3:4"
-                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                    />
+                    // Error State: Visual Debugging Helper
+                    <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-neutral-900 border border-red-900/30">
+                        <ImageOff className="w-12 h-12 text-red-500 mb-4 opacity-50" />
+                        <p className="text-red-400 font-mono text-xs uppercase tracking-widest mb-2 font-bold">Image Not Found</p>
+                        
+                        <div className="bg-black border border-white/10 p-3 rounded mb-4 max-w-full">
+                            <p className="text-neutral-500 font-mono text-[10px] mb-1">Looking for file:</p>
+                            <p className="text-white font-mono text-xs break-all font-bold text-[#FF3333]">
+                                {breed.customImage}
+                            </p>
+                        </div>
+
+                        <p className="text-neutral-600 font-mono text-[9px] mb-6">
+                            Make sure this file exists in your <span className="text-white">public</span> folder.
+                        </p>
+
+                        <button 
+                            onClick={handleRetry}
+                            className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold uppercase tracking-widest transition-colors rounded"
+                        >
+                            <RefreshCw size={12} />
+                            Try Again
+                        </button>
+                    </div>
                 )}
             </div>
             
             {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90 transition-opacity duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90 transition-opacity duration-300 pointer-events-none"></div>
             
             {/* Text Overlay */}
-            <div className="absolute inset-0 p-8 flex flex-col justify-between">
+            <div className="absolute inset-0 p-8 flex flex-col justify-between pointer-events-none">
                 <div className="self-start flex items-center gap-2">
                     <span className="text-[9px] font-bold text-[#FF3333]">0{breed.id}</span>
                     <span className="bg-white/10 backdrop-blur text-white text-[9px] font-bold px-3 py-1 uppercase tracking-widest border border-white/10">
@@ -62,7 +90,7 @@ const BreedItem = ({ breed, index, isMobileRight, isMobileBottom, isDesktopRight
 };
 
 const StatsBar: React.FC = () => {
-    // 6 Scents Collection - linking strictly to public/*.png files
+    // 6 Scents Collection - Casing updated to match your screenshot
     const breeds = [
         {
             id: 1,
@@ -70,7 +98,7 @@ const StatsBar: React.FC = () => {
             country: "Germany",
             scent: "Black Pine / Leather",
             prompt: "Doberman Pinscher",
-            customImage: "/doberman01.png"
+            customImage: "Doberman01.png"
         },
         {
             id: 2,
@@ -78,7 +106,7 @@ const StatsBar: React.FC = () => {
             country: "Italy",
             scent: "Warm Stone / Fig Leaf",
             prompt: "Italian Greyhound",
-            customImage: "/greyhound01.png"
+            customImage: "Greyhound01.png"
         },
         {
             id: 3,
@@ -86,7 +114,7 @@ const StatsBar: React.FC = () => {
             country: "Scotland",
             scent: "Golden Amber / Oat",
             prompt: "Golden Retriever",
-            customImage: "/golden01.png"
+            customImage: "golden01.png" 
         },
         {
             id: 4,
@@ -94,7 +122,7 @@ const StatsBar: React.FC = () => {
             country: "France",
             scent: "Vetiver / Champagne",
             prompt: "Standard Poodle White",
-            customImage: "/poodle01.png"
+            customImage: "Poodle01.png"
         },
         {
             id: 5,
@@ -102,7 +130,7 @@ const StatsBar: React.FC = () => {
             country: "Japan",
             scent: "Hinoki / Toasted Rice",
             prompt: "Shiba Inu",
-            customImage: "/shiba01.png"
+            customImage: "Shiba01.png"
         },
         {
             id: 6,
@@ -110,7 +138,7 @@ const StatsBar: React.FC = () => {
             country: "Malta",
             scent: "Sea Salt / White Musk",
             prompt: "Maltese Dog",
-            customImage: "/maltese01.png"
+            customImage: "Maltese01.png"
         }
     ];
 
