@@ -9,7 +9,7 @@ const SplineHero: React.FC = () => {
       <div className="w-full md:w-1/2 h-full border-r border-white/20 relative flex flex-col justify-between p-8 md:p-12 z-10 pointer-events-none">
          <div>
             <div className="w-2 h-2 bg-[#FF3333] mb-8"></div>
-            <h1 className="text-6xl md:text-[8vw] font-display font-bold text-white leading-[0.8] tracking-tighter mb-8 break-words mix-blend-difference">
+            <h1 className="text-6xl md:text-[8vw] font-display font-bold text-white leading-[0.9] tracking-tighter mb-8 break-words mix-blend-difference">
                 SCULPTURAL<br/>REED<br/><span className="text-outline-white text-transparent" style={{ WebkitTextStroke: '1px white' }}>DIFFUSERS</span>
             </h1>
          </div>
