@@ -52,7 +52,7 @@ const BreedItem = ({ breed, index, isMobileRight, isMobileBottom, isDesktopRight
 
 const StatsBar: React.FC = () => {
     // 6 Scents Collection
-    // Updated to use local assets from the public folder
+    // Updated to use absolute URLs as requested
     const breeds = [
         {
             id: 1,
@@ -60,7 +60,7 @@ const StatsBar: React.FC = () => {
             country: "Germany",
             scent: "Black Pine / Leather",
             prompt: "Doberman Pinscher",
-            image: "/Doberman01.png"
+            image: "https://fup-diffuser.vercel.app/Doberman01.png"
         },
         {
             id: 2,
@@ -68,7 +68,7 @@ const StatsBar: React.FC = () => {
             country: "Italy",
             scent: "Warm Stone / Fig Leaf",
             prompt: "Italian Greyhound",
-            image: "/Greyhound01.png"
+            image: "https://fup-diffuser.vercel.app/Greyhound01.png"
         },
         {
             id: 3,
@@ -76,7 +76,7 @@ const StatsBar: React.FC = () => {
             country: "Scotland",
             scent: "Golden Amber / Oat",
             prompt: "Golden Retriever",
-            image: "/golden01.png"
+            image: "https://fup-diffuser.vercel.app/golden01.png"
         },
         {
             id: 4,
@@ -84,7 +84,7 @@ const StatsBar: React.FC = () => {
             country: "France",
             scent: "Vetiver / Champagne",
             prompt: "Standard Poodle White",
-            image: "/Poodle01.png"
+            image: "https://fup-diffuser.vercel.app/Poodle01.png"
         },
         {
             id: 5,
@@ -92,7 +92,7 @@ const StatsBar: React.FC = () => {
             country: "Japan",
             scent: "Hinoki / Toasted Rice",
             prompt: "Shiba Inu",
-            image: "/Shiba01.png"
+            image: "https://fup-diffuser.vercel.app/Shiba01.png"
         },
         {
             id: 6,
@@ -100,7 +100,7 @@ const StatsBar: React.FC = () => {
             country: "Malta",
             scent: "Sea Salt / White Musk",
             prompt: "Maltese Dog",
-            image: "/Maltese01.png"
+            image: "https://fup-diffuser.vercel.app/Maltese01.png"
         }
     ];
 
