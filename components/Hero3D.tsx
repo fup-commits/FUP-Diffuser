@@ -3,43 +3,6 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, Environment, ContactShadows, Float } from '@react-three/drei';
 import * as THREE from 'three';
 
-// TypeScript Fix for R3F Elements
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      primitive: any;
-      group: any;
-      mesh: any;
-      cylinderGeometry: any;
-      boxGeometry: any;
-      planeGeometry: any;
-      meshStandardMaterial: any;
-      meshPhysicalMaterial: any;
-      ambientLight: any;
-      spotLight: any;
-      pointLight: any;
-    }
-  }
-}
-
-declare module 'react' {
-  namespace JSX {
-    interface IntrinsicElements {
-      primitive: any;
-      group: any;
-      mesh: any;
-      cylinderGeometry: any;
-      boxGeometry: any;
-      planeGeometry: any;
-      meshStandardMaterial: any;
-      meshPhysicalMaterial: any;
-      ambientLight: any;
-      spotLight: any;
-      pointLight: any;
-    }
-  }
-}
-
 // 1. Procedural Diffuser (Main Display)
 // Since the GLB file is missing, this procedural generation acts as the primary visual.
 // It creates a photorealistic glass bottle with reeds using standard Three.js primitives.
