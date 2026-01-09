@@ -1,6 +1,6 @@
 import React, { Suspense, useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Environment, ContactShadows, Float } from '@react-three/drei';
+import { useGLTF, Environment, ContactShadows, Float } from '@react-three/drei';
 import * as THREE from 'three';
 
 // TypeScript Fix for R3F Elements
@@ -40,24 +40,23 @@ declare module 'react' {
   }
 }
 
-// 1. Procedural Diffuser Model (Replaces missing GLB)
+// 1. Procedural Diffuser (Main Display)
+// Since the GLB file is missing, this procedural generation acts as the primary visual.
+// It creates a photorealistic glass bottle with reeds using standard Three.js primitives.
 const ProceduralDiffuser = (props: any) => {
-  
-  // Generate random reeds once
   const reeds = useMemo(() => {
      return Array.from({ length: 8 }).map((_, i) => {
-        const spread = 0.15;
-        // Random spread logic
+        const spread = 0.12;
         const x = (Math.random() - 0.5) * spread;
         const z = (Math.random() - 0.5) * spread;
-        const leanX = (Math.random() - 0.5) * 0.25;
-        const leanZ = (Math.random() - 0.5) * 0.25;
-        const height = 4.0 + Math.random() * 0.5;
+        const leanX = (Math.random() - 0.5) * 0.2;
+        const leanZ = (Math.random() - 0.5) * 0.2;
+        const height = 3.8 + Math.random() * 0.6;
         
         return (
             <mesh key={i} position={[x, 1.8, z]} rotation={[leanX, 0, leanZ]} castShadow>
-                <cylinderGeometry args={[0.015, 0.015, height, 8]} />
-                <meshStandardMaterial color="#1a1a1a" roughness={0.9} />
+                <cylinderGeometry args={[0.012, 0.012, height, 8]} />
+                <meshStandardMaterial color="#050505" roughness={0.8} />
             </mesh>
         )
      });
@@ -67,79 +66,114 @@ const ProceduralDiffuser = (props: any) => {
     <group {...props}>
         {/* Glass Bottle Body */}
         <mesh position={[0, 0, 0]} castShadow receiveShadow>
-            <boxGeometry args={[1.5, 2.2, 1.5]} />
+            <boxGeometry args={[1.4, 2.0, 1.4]} />
             <meshPhysicalMaterial 
-                transmission={0.98} 
-                roughness={0.05} 
+                transmission={0.99} 
+                roughness={0.02} 
                 thickness={2} 
-                envMapIntensity={2.5} 
-                clearcoat={1}
-                color="#ffffff"
+                envMapIntensity={2.0} 
+                clearcoat={1} 
+                color="#ffffff" 
                 ior={1.5}
+                attenuationColor="#ffffff"
+                attenuationDistance={0.5}
             />
         </mesh>
-
-        {/* Liquid Inside - Dark Amber/Red/Black */}
-        <mesh position={[0, -0.2, 0]}>
-            <boxGeometry args={[1.35, 1.7, 1.35]} />
-            <meshStandardMaterial color="#3a0505" roughness={0.2} />
+        {/* Liquid Inside - Dark Amber/Red */}
+        <mesh position={[0, -0.1, 0]}>
+            <boxGeometry args={[1.25, 1.6, 1.25]} />
+            <meshStandardMaterial color="#2a0a0a" roughness={0.2} transparent opacity={0.9} />
         </mesh>
-
-        {/* Bottle Neck/Collar */}
-        <mesh position={[0, 1.15, 0]} castShadow>
-            <cylinderGeometry args={[0.28, 0.28, 0.4, 32]} />
-            <meshStandardMaterial color="#111" metalness={0.8} roughness={0.2} />
+        {/* Bottle Neck */}
+        <mesh position={[0, 1.05, 0]} castShadow>
+            <cylinderGeometry args={[0.25, 0.25, 0.35, 32]} />
+            <meshStandardMaterial color="#050505" metalness={0.9} roughness={0.1} />
         </mesh>
-
-        {/* Minimalist Front Label */}
-        <mesh position={[0, 0, 0.76]}>
-            <planeGeometry args={[1, 1.4]} />
-            <meshStandardMaterial color="#f4f4f5" roughness={0.9} />
+        {/* Label */}
+        <mesh position={[0, -0.2, 0.71]}>
+            <planeGeometry args={[0.9, 1.2]} />
+            <meshStandardMaterial color="#f4f4f5" roughness={0.4} metalness={0.1} />
         </mesh>
-        
-        {/* Label Graphics (Simulated with simple geometry) */}
-        <group position={[0, 0, 0.77]}>
-            {/* Title Bar */}
-            <mesh position={[0, 0.3, 0]}>
-                <planeGeometry args={[0.6, 0.08]} />
-                <meshStandardMaterial color="#000" />
+        {/* Label Graphics */}
+        <group position={[0, -0.2, 0.72]}>
+             <mesh position={[0, 0.35, 0]}>
+                <planeGeometry args={[0.4, 0.06]} />
+                <meshStandardMaterial color="#050505" />
             </mesh>
-             {/* Subtitle Line */}
-             <mesh position={[0, 0.15, 0]}>
-                <planeGeometry args={[0.4, 0.01]} />
-                <meshStandardMaterial color="#000" />
+             <mesh position={[0, 0.25, 0]}>
+                <planeGeometry args={[0.2, 0.01]} />
+                <meshStandardMaterial color="#050505" />
             </mesh>
-             {/* Red Accent at bottom */}
-             <mesh position={[0, -0.5, 0]}>
-                <planeGeometry args={[0.15, 0.15]} />
+            <mesh position={[0, -0.4, 0]}>
+                <planeGeometry args={[0.1, 0.1]} />
                 <meshStandardMaterial color="#FF3333" />
             </mesh>
         </group>
-
-        {/* The Reeds */}
+        {/* Reeds */}
         {reeds}
     </group>
   );
 };
 
-// 2. Mouse Interaction Rig
+// 2. Real Model Loader
+// NOTE: Set ATTEMPT_LOAD_GLB to true only if you have 'diffuser.glb' in your public folder.
+const ATTEMPT_LOAD_GLB = false;
+
+const Model = (props: any) => {
+  if (!ATTEMPT_LOAD_GLB) return null;
+  const { scene } = useGLTF('/diffuser.glb');
+  
+  React.useLayoutEffect(() => {
+    scene.traverse((obj: any) => {
+      if (obj.isMesh) {
+        obj.castShadow = true;
+        obj.receiveShadow = true;
+        
+        if(obj.material) {
+             obj.material.envMapIntensity = 1.5;
+             obj.material.roughness = 0.2; 
+             obj.material.needsUpdate = true;
+        }
+      }
+    });
+  }, [scene]);
+
+  return <primitive object={scene} {...props} />;
+};
+
+// 3. Mouse Interaction Rig
 const Rig = ({ children }: { children: React.ReactNode }) => {
     const group = useRef<THREE.Group>(null);
-    
     useFrame((state) => {
         if (group.current) {
-            const targetY = state.pointer.x * 0.4; 
-            const targetX = -state.pointer.y * 0.2; 
-            
+            const targetY = state.pointer.x * 0.3; 
+            const targetX = -state.pointer.y * 0.15; 
             group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, targetY, 0.05);
             group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, targetX, 0.05);
         }
     });
-
     return <group ref={group}>{children}</group>;
 }
 
-// 3. Minimal Loading Spinner
+// 4. Silent Error Boundary
+class ModelErrorBoundary extends React.Component<{ children: React.ReactNode, fallback: React.ReactNode }, { hasError: boolean }> {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true };
+  }
+  componentDidCatch(error: any) {
+    // Intentionally empty to suppress console warnings
+  }
+  render() {
+    if (this.state.hasError) return this.props.fallback;
+    return this.props.children;
+  }
+}
+
+// 5. Loading Spinner
 const LoadingFallback = () => {
     return (
         <group>
@@ -151,25 +185,13 @@ const LoadingFallback = () => {
     )
 };
 
-// 4. Error Boundary
-class SceneErrorBoundary extends React.Component<{ children: React.ReactNode, fallback: React.ReactNode }, { hasError: boolean }> {
-  constructor(props: any) {
-    super(props);
-    this.state = { hasError: false };
-  }
-  static getDerivedStateFromError(error: any) {
-    return { hasError: true };
-  }
-  componentDidCatch(error: any) {
-    console.error("3D Scene Error:", error);
-  }
-  render() {
-    if (this.state.hasError) return this.props.fallback;
-    return this.props.children;
-  }
-}
-
 const Hero3D: React.FC = () => {
+  const modelProps = {
+    scale: 4.5,
+    position: [2.5, 0.2, 0],
+    rotation: [0.3, -0.2, 0.2]
+  };
+
   return (
     <div className="relative w-full h-screen bg-[#050505] overflow-hidden">
       
@@ -182,61 +204,46 @@ const Hero3D: React.FC = () => {
             gl={{ preserveDrawingBuffer: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping }}
             className="w-full h-full"
         >
-            {/* Dramatic Studio Lighting */}
-            <ambientLight intensity={0.4} />
+            <ambientLight intensity={0.5} />
             <spotLight 
                 position={[10, 10, 10]} 
-                angle={0.2} 
+                angle={0.25} 
                 penumbra={1} 
-                intensity={3} 
+                intensity={4} 
                 castShadow 
                 shadow-bias={-0.0001}
             />
             <pointLight position={[-5, 2, -5]} intensity={2} color="#FF3333" distance={15} />
             <pointLight position={[5, -2, 5]} intensity={1} color="#4444ff" distance={15} />
 
-            <Environment preset="city" blur={1} />
+            <Environment preset="city" blur={1} background={false} />
 
-            {/* Scene Content */}
             <Suspense fallback={<LoadingFallback />}>
-                <SceneErrorBoundary fallback={<LoadingFallback />}>
-                     {/* Mouse Interaction Rig */}
-                     <Rig>
-                        <Float 
-                            speed={1.5} 
-                            rotationIntensity={0.2} 
-                            floatIntensity={0.2} 
-                            floatingRange={[-0.1, 0.1]}
-                        >
-                            {/* 
-                                Model Configuration:
-                                - Scale: 4.5 (Maintained)
-                                - Position X: 2.5 (Maintained)
-                                - Position Y: 0.2 (Maintained)
-                                - Rotation: Tilted diagonally
-                            */}
-                            <ProceduralDiffuser 
-                                scale={4.5} 
-                                position={[2.5, 0.2, 0]} 
-                                rotation={[0.3, -0.2, 0.2]} 
-                            />
-                        </Float>
-                     </Rig>
-                </SceneErrorBoundary>
+                <Rig>
+                    <Float speed={2} rotationIntensity={0.2} floatIntensity={0.2} floatingRange={[-0.1, 0.1]}>
+                        
+                        {ATTEMPT_LOAD_GLB ? (
+                             <ModelErrorBoundary fallback={<ProceduralDiffuser {...modelProps} />}>
+                                 <Model {...modelProps} />
+                             </ModelErrorBoundary>
+                        ) : (
+                             <ProceduralDiffuser {...modelProps} />
+                        )}
+
+                    </Float>
+                </Rig>
             </Suspense>
 
-            <ContactShadows resolution={1024} scale={50} blur={2} opacity={0.6} far={10} color="#000000" />
+            <ContactShadows resolution={1024} scale={50} blur={2} opacity={0.5} far={10} color="#000000" />
             
         </Canvas>
 
-        {/* Cinematic Vignette/Gradient */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent pointer-events-none"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent pointer-events-none h-32 bottom-0"></div>
       </div>
 
       {/* Content Overlay */}
       <div className="relative z-10 w-full h-full flex flex-col justify-center px-8 md:px-16 lg:px-24 pointer-events-none">
-         
          <div className="mb-12 mt-16">
             <div className="w-2 h-2 bg-[#FF3333] mb-8 shadow-[0_0_10px_#FF3333]"></div>
             <h1 className="text-6xl md:text-[7vw] lg:text-[8vw] font-display font-bold text-white leading-[1.1] tracking-tighter break-words drop-shadow-2xl">
@@ -245,7 +252,6 @@ const Hero3D: React.FC = () => {
                 <span className="text-transparent" style={{ WebkitTextStroke: '1px white' }}>DIFFUSERS</span>
             </h1>
          </div>
-         
          <div className="space-y-8 max-w-lg pointer-events-auto">
              <p className="font-serif text-xl md:text-2xl text-neutral-300 italic leading-relaxed text-shadow-sm border-l-2 border-[#FF3333] pl-6 mix-blend-difference">
                  "Transform your home into a sanctuary with architectural scent objects."
@@ -261,7 +267,6 @@ const Hero3D: React.FC = () => {
             <span className="text-[9px] bg-[#FF3333] text-white px-2 py-1 font-bold uppercase tracking-widest shadow-lg">Vol. 25</span>
             <span className="text-[9px] border border-white/30 text-white/80 px-2 py-1 font-bold uppercase tracking-widest backdrop-blur-sm">Est. 2024</span>
       </div>
-      
     </div>
   );
 };
