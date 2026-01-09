@@ -1,61 +1,77 @@
 import React from 'react';
-import { Menu, X, ShoppingBag } from 'lucide-react';
+import { Menu, X, ShoppingBag, Search } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
     <>
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-auto max-w-[95%] transition-all duration-300">
-        <div className="flex items-center justify-between p-2 pl-8 bg-black/80 backdrop-blur-md border border-white/10 rounded-full shadow-2xl">
-          {/* Logo */}
-          <div className="flex items-center gap-8 mr-6">
-             {/* Updated Logo: Image based */}
-             {/* Make sure to place your 'logo.png' in the public folder */}
-             <a href="#" className="block">
-               <img 
-                 src="/logo.png" 
-                 alt="FUP Logo" 
-                 className="h-8 w-auto object-contain"
-                 onError={(e) => {
-                   // Fallback to text if image fails to load
-                   e.currentTarget.style.display = 'none';
-                   e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                 }}
-               />
-               {/* Fallback Text (Hidden by default, shown if image missing) */}
-               <span className="hidden font-sans text-3xl font-black text-white tracking-tighter scale-y-125 origin-center">FUP</span>
+      <nav className="fixed top-0 left-0 w-full z-50 bg-[#050505]/80 backdrop-blur-md border-b border-white/20 text-white transition-all duration-300">
+        <div className="flex items-stretch justify-between h-20">
+          
+          {/* Logo Section - Left */}
+          <div className="flex items-center px-8 border-r border-white/20">
+             <a href="#" className="block group">
+               <span className="font-display font-bold text-4xl tracking-tighter uppercase group-hover:text-[#FF3333] transition-colors">FUP.</span>
              </a>
-             
-             <div className="hidden md:flex gap-8 text-xs font-medium text-gray-400 uppercase tracking-widest">
-               <a href="#" className="hover:text-white transition-colors">Collection</a>
-               <a href="#" className="hover:text-white transition-colors">Our Story</a>
-               <a href="#" className="hover:text-white transition-colors">Review</a>
+          </div>
+
+          {/* Desktop Links - Center */}
+          <div className="hidden md:flex flex-1 items-center justify-center border-r border-white/20">
+             <div className="flex gap-16 text-xs font-bold uppercase tracking-[0.2em] text-neutral-400">
+               <a href="#" className="hover:text-white transition-colors">Diffusers</a>
+               <a href="#" className="hover:text-white transition-colors">Refills</a>
+               <a href="#" className="hover:text-white transition-colors">Objects</a>
              </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-3">
-            <button className="hidden sm:flex items-center gap-2 px-6 py-2.5 text-xs font-bold text-black bg-white hover:bg-gray-200 rounded-full transition-all">
-              <ShoppingBag size={14} />
-              <span>SHOP</span>
-            </button>
-            <button 
-              onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-2 text-white"
-            >
-              {isOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
+          {/* Actions - Right */}
+          <div className="flex items-center">
+             <div className="hidden md:flex items-center justify-center h-full w-20 border-r border-white/20 cursor-pointer hover:bg-white/5 transition-colors">
+                <Search size={18} className="text-white" />
+             </div>
+             <div className="hidden md:flex items-center h-full px-8 border-r border-white/20 hover:bg-white hover:text-black transition-colors cursor-pointer group">
+                <span className="text-[10px] font-bold uppercase tracking-widest group-hover:tracking-[0.25em] transition-all">Account</span>
+             </div>
+             <button className="flex items-center justify-center h-full px-8 bg-[#FF3333] text-white hover:bg-[#CC0000] transition-colors">
+                <ShoppingBag size={18} />
+                <span className="ml-3 text-[10px] font-bold hidden md:inline tracking-widest">CART (0)</span>
+             </button>
+             <button 
+                onClick={() => setIsOpen(!isOpen)}
+                className="md:hidden flex items-center justify-center h-full px-6 border-l border-white/20 text-white"
+             >
+                {isOpen ? <X size={20} /> : <Menu size={20} />}
+             </button>
           </div>
+        </div>
+        
+        {/* Marquee text - Inverted colors for contrast */}
+        <div className="w-full bg-white text-black overflow-hidden py-1.5 border-b border-white/20">
+            <div className="animate-marquee whitespace-nowrap flex gap-12 text-[9px] font-bold uppercase tracking-[0.2em]">
+                <span>Global Shipping Included</span>
+                <span className="text-[#FF3333]">•</span>
+                <span>The Red Reed Collection</span>
+                <span className="text-[#FF3333]">•</span>
+                <span>Limited Edition Borzoi Diffuser</span>
+                <span className="text-[#FF3333]">•</span>
+                <span>Global Shipping Included</span>
+                <span className="text-[#FF3333]">•</span>
+                <span>The Red Reed Collection</span>
+                <span className="text-[#FF3333]">•</span>
+                <span>Limited Edition Borzoi Diffuser</span>
+            </div>
         </div>
       </nav>
 
       {/* Mobile Menu Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black z-40 flex flex-col items-center justify-center space-y-8 md:hidden">
-          <a href="#" className="text-4xl font-serif text-white italic">Collection</a>
-          <a href="#" className="text-4xl font-serif text-white italic">Story</a>
-          <a href="#" className="text-4xl font-serif text-white italic">Review</a>
+        <div className="fixed inset-0 bg-[#050505] z-40 flex flex-col pt-32 px-6">
+          <div className="flex flex-col space-y-6">
+            <a href="#" className="text-5xl font-display font-bold text-white uppercase border-b border-white/20 pb-4 hover:text-[#FF3333] transition-colors">Diffusers</a>
+            <a href="#" className="text-5xl font-display font-bold text-white uppercase border-b border-white/20 pb-4 hover:text-[#FF3333] transition-colors">Refills</a>
+            <a href="#" className="text-5xl font-display font-bold text-white uppercase border-b border-white/20 pb-4 hover:text-[#FF3333] transition-colors">Journal</a>
+          </div>
         </div>
       )}
     </>

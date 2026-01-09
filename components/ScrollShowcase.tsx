@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import GeneratedImage from './GeneratedImage';
 
 const ScrollShowcase = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -8,60 +9,94 @@ const ScrollShowcase = () => {
     offset: ["start start", "end end"]
   });
 
-  const opacity1 = useTransform(scrollYProgress, [0, 0.2, 0.3], [0, 1, 0]);
-  const opacity2 = useTransform(scrollYProgress, [0.3, 0.5, 0.6], [0, 1, 0]);
-  const opacity3 = useTransform(scrollYProgress, [0.6, 0.8, 0.9], [0, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+  const opacity1 = useTransform(scrollYProgress, [0, 0.1, 0.25, 0.3], [0, 1, 1, 0]);
+  const opacity2 = useTransform(scrollYProgress, [0.3, 0.4, 0.55, 0.6], [0, 1, 1, 0]);
+  const opacity3 = useTransform(scrollYProgress, [0.6, 0.7, 0.9, 1], [0, 1, 1, 1]);
 
   return (
-    <section ref={containerRef} className="relative h-[300vh] bg-black">
-      <div className="sticky top-0 h-screen overflow-hidden">
-        {/* Abstract Video Background */}
-        <motion.div style={{ scale }} className="absolute inset-0 w-full h-full">
-           <video 
-            autoPlay 
-            muted 
-            loop 
-            playsInline 
-            className="absolute inset-0 w-full h-full object-cover opacity-40 grayscale"
-          >
-            {/* Ink swirling represents the diffusion of scent in a monochrome world */}
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-ink-swirling-in-water-209-large.mp4" type="video/mp4" />
-          </video>
-        </motion.div>
+    <section ref={containerRef} className="relative h-[300vh] bg-[#050505] border-b border-white/20">
+      <div className="sticky top-0 h-screen w-full flex flex-col md:flex-row overflow-hidden">
         
-        <div className="absolute inset-0 bg-black/30"></div>
-
-        {/* Content Container */}
-        <div className="relative z-10 h-full flex items-center justify-center pointer-events-none">
+        {/* Left Side: Text Motion Area */}
+        <div className="w-full md:w-1/2 h-full flex flex-col justify-center items-center relative border-r border-white/20 bg-[#050505] z-10 p-12">
           
-          <motion.div style={{ opacity: opacity1 }} className="absolute text-center max-w-4xl px-6">
-            <h2 className="text-5xl md:text-7xl font-serif text-white mb-6">Homage to Classic</h2>
-            <p className="text-lg md:text-xl text-white/70 font-light tracking-wide leading-relaxed">
-              Inspired by the timeless elegance of <span className="text-white italic">Chanel</span> codes. <br/>
-              Black lines, white canvas, and the perfect square.
-            </p>
-          </motion.div>
+          <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 pointer-events-none opacity-10">
+              <div className="border-r border-b border-white"></div>
+              <div className="border-b border-white"></div>
+              <div className="border-r border-white"></div>
+          </div>
 
-          <motion.div style={{ opacity: opacity2 }} className="absolute text-center max-w-4xl px-6">
-             <h2 className="text-5xl md:text-7xl font-serif text-white mb-6">The Square</h2>
-             <p className="text-lg md:text-xl text-white/70 font-light tracking-wide leading-relaxed">
-               Heavy glass bottom. Architectural angles. <br/>
-               A scent object designed to be the centerpiece of your space.
+          <motion.div style={{ opacity: opacity1 }} className="absolute px-8 md:px-16 w-full text-left">
+             <div className="text-[#FF3333] font-mono text-[9px] uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
+                <span className="w-4 h-[1px] bg-[#FF3333]"></span>
+                Note 01
+             </div>
+             <h2 className="text-6xl md:text-8xl font-display font-bold text-white uppercase mb-8 leading-none tracking-tighter">
+               Liquid<br/>Silk
+             </h2>
+             <p className="text-xl font-serif text-neutral-500 max-w-sm italic leading-relaxed">
+               The scent begins as a fluid emotion. Smooth, enveloping, and impossible to hold.
              </p>
           </motion.div>
 
-           <motion.div style={{ opacity: opacity3 }} className="absolute text-center max-w-4xl px-6">
-             <h2 className="text-5xl md:text-7xl font-serif text-white mb-6">Luxury Daily</h2>
-             <p className="text-lg md:text-xl text-white/70 font-light tracking-wide leading-relaxed">
-               200ml + 200ml Capacity. <br/>
-               Uncompromising quality at <span className="text-white font-serif italic">24,900 KRW</span>.
+          <motion.div style={{ opacity: opacity2 }} className="absolute px-8 md:px-16 w-full text-left">
+             <div className="text-white font-mono text-[9px] uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
+                <span className="w-4 h-[1px] bg-white"></span>
+                Note 02
+             </div>
+             <h2 className="text-6xl md:text-8xl font-display font-bold text-white uppercase mb-8 leading-none tracking-tighter">
+               Cold<br/>Crystal
+             </h2>
+             <p className="text-xl font-serif text-neutral-500 max-w-sm italic leading-relaxed">
+                Sharp citrus notes cutting through the air like refracted light in a prism.
              </p>
           </motion.div>
+
+          <motion.div style={{ opacity: opacity3 }} className="absolute px-8 md:px-16 w-full text-left">
+             <div className="text-neutral-500 font-mono text-[9px] uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
+                <span className="w-4 h-[1px] bg-neutral-500"></span>
+                Note 03
+             </div>
+             <h2 className="text-6xl md:text-8xl font-display font-bold text-white uppercase mb-8 leading-none tracking-tighter">
+               Deep<br/>Ink
+             </h2>
+             <p className="text-xl font-serif text-neutral-500 max-w-sm italic leading-relaxed">
+                The dry down. A permanent mark on the memory, dark and resonant.
+             </p>
+          </motion.div>
+          
         </div>
-        
-        {/* Progress Bar */}
-        <motion.div style={{ scaleX: scrollYProgress }} className="absolute bottom-0 left-0 h-1 bg-white origin-left w-full" />
+
+        {/* Right Side: Product Image Area */}
+        <div className="hidden md:block w-1/2 h-full relative bg-[#000]">
+           <motion.div style={{ opacity: opacity1 }} className="absolute inset-0">
+             <GeneratedImage 
+               prompt="Macro photography of red silk fabric rippling in water, elegant fluid motion, high contrast, cinematic lighting, luxurious texture, black background, red and black."
+               alt="Silk Texture"
+               aspectRatio="3:4"
+               className="w-full h-full object-cover"
+             />
+           </motion.div>
+           
+           <motion.div style={{ opacity: opacity2 }} className="absolute inset-0">
+             <GeneratedImage 
+               prompt="Abstract crystal macro photography, shards of glass reflecting light, sharp angles, clean and minimalist, cool tones, black and white photography."
+               alt="Crystal Texture"
+               aspectRatio="3:4"
+               className="w-full h-full object-cover"
+             />
+           </motion.div>
+
+           <motion.div style={{ opacity: opacity3 }} className="absolute inset-0">
+             <GeneratedImage 
+               prompt="Black ink dropping into water, swirling smoke effect, macro photography, high speed capture, abstract art, mysterious and dark, white background, high contrast."
+               alt="Ink Texture"
+               aspectRatio="3:4"
+               className="w-full h-full object-cover"
+             />
+           </motion.div>
+        </div>
+
       </div>
     </section>
   )

@@ -47,8 +47,8 @@ const AiSection: React.FC = () => {
         {/* Text Side */}
         <div className="text-left space-y-8 order-2 md:order-1">
           <div className="flex items-center gap-3 text-white mb-4">
-             <Scan className="w-5 h-5 animate-pulse" />
-             <span className="text-xs uppercase tracking-[0.2em]">AI Scent Curator</span>
+             <Scan className="w-5 h-5 animate-pulse text-[#FF3333]" />
+             <span className="text-xs uppercase tracking-[0.2em]">AI Breed Matcher</span>
           </div>
           
           <motion.h2 
@@ -58,7 +58,7 @@ const AiSection: React.FC = () => {
             className="text-5xl md:text-7xl font-serif text-white leading-tight"
           >
             Find your <br />
-            <span className="italic text-gray-400">Signature.</span>
+            <span className="italic text-gray-400">Spirit Animal.</span>
           </motion.h2>
 
           <motion.p 
@@ -67,11 +67,11 @@ const AiSection: React.FC = () => {
             transition={{ delay: 0.3, duration: 0.8 }}
             className="text-lg text-gray-400 font-light leading-relaxed max-w-md"
           >
-            Not sure which scent fits your space? Our AI analyzes your environment's lighting, texture, and mood to recommend the perfect match from the fup collection.
+            Our AI analyzes your environment's mood and texture to match you with the perfect Breed Scent. Are you a minimalist Akita or a bold Doberman?
           </motion.p>
           
-          <button className="px-8 py-3 bg-white text-black font-bold uppercase tracking-widest text-xs hover:bg-gray-200 transition-colors">
-            Start Analysis
+          <button className="px-8 py-3 bg-white text-black font-bold uppercase tracking-widest text-xs hover:bg-[#FF3333] hover:text-white transition-colors">
+            Analyze Environment
           </button>
         </div>
 
@@ -108,7 +108,7 @@ const AiSection: React.FC = () => {
                 <motion.div 
                   animate={{ top: ['0%', '100%', '0%'] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                  className="absolute left-0 right-0 h-[1px] bg-white w-full shadow-[0_0_10px_rgba(255,255,255,0.8)]"
+                  className="absolute left-0 right-0 h-[1px] bg-[#FF3333] w-full shadow-[0_0_10px_rgba(255,51,51,0.8)]"
                 />
              </div>
 
@@ -116,23 +116,23 @@ const AiSection: React.FC = () => {
              <div className="absolute inset-0 p-6 flex flex-col justify-between pointer-events-none">
                 <div className="flex justify-between items-start">
                    <div className="bg-black/50 backdrop-blur border border-white/30 px-2 py-1 text-[10px] text-white flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
-                      LIVE
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#FF3333] animate-pulse"></div>
+                      DETECTING
                    </div>
                    <Camera className="w-5 h-5 text-white/60" />
                 </div>
                 
                 <div className="border border-white/20 p-2 bg-black/40 backdrop-blur">
-                  <p className="text-[10px] uppercase text-white mb-1">Recommendation:</p>
-                  <p className="text-lg font-serif italic text-white">Modern Black</p>
+                  <p className="text-[10px] uppercase text-white mb-1">Top Match:</p>
+                  <p className="text-lg font-serif italic text-white">The Greyhound</p>
                 </div>
              </div>
              
              {/* Dynamic Tags */}
-             <Tag text="Space: Living Room" delay={0.5} x="50%" y="20%" />
-             <Tag text="Lighting: Dim" delay={1.5} x="20%" y="40%" />
-             <Tag text="Texture: Wood" delay={2.5} x="70%" y="60%" />
-             <Tag text="Match: Woody/Amber" delay={3.5} x="30%" y="80%" />
+             <Tag text="Vibe: Minimalist" delay={0.5} x="50%" y="20%" />
+             <Tag text="Light: Cool" delay={1.5} x="20%" y="40%" />
+             <Tag text="Note: Leather" delay={2.5} x="70%" y="60%" />
+             <Tag text="Origin: Italy" delay={3.5} x="30%" y="80%" />
              
           </motion.div>
         </div>

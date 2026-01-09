@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Oswald:wght@400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
         theme: {
@@ -15,6 +15,7 @@
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
               serif: ['Playfair Display', 'serif'],
+              display: ['Oswald', 'sans-serif'],
             },
             colors: {
               brand: {
@@ -27,11 +28,16 @@
             animation: {
               'float': 'float 6s ease-in-out infinite',
               'spin-slow': 'spin 12s linear infinite',
+              'marquee': 'marquee 25s linear infinite',
             },
             keyframes: {
               float: {
                 '0%, 100%': { transform: 'translateY(0)' },
                 '50%': { transform: 'translateY(-20px)' },
+              },
+              marquee: {
+                '0%': { transform: 'translateX(0%)' },
+                '100%': { transform: 'translateX(-100%)' },
               }
             }
           }
@@ -48,7 +54,7 @@
       }
       ::-webkit-scrollbar-thumb {
         background: #333;
-        border-radius: 4px;
+        border-radius: 0px;
       }
       ::-webkit-scrollbar-thumb:hover {
         background: #555;
@@ -66,7 +72,8 @@
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/",
     "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "framer-motion": "https://esm.sh/framer-motion@^12.24.12"
+    "framer-motion": "https://esm.sh/framer-motion@^12.24.12",
+    "@google/genai": "https://esm.sh/@google/genai@^1.35.0"
   }
 }
 </script>

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import SplineHero from './components/SplineHero';
-import FeatureGrid from './components/FeatureGrid';
+import FeatureGrid from './components/FeatureGrid'; // This is now the Bento Grid
 import AiSection from './components/AiSection';
 import ScrollShowcase from './components/ScrollShowcase';
 import Footer from './components/Footer';
+import StatsBar from './components/StatsBar';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -32,10 +33,10 @@ function App() {
       
       <main>
         <SplineHero />
+        <StatsBar />
+        {/* Bento Grid & Strong Foundation Section */}
+        <FeatureGrid /> 
         <ScrollShowcase />
-        <div className="relative z-20 bg-[#050505] pb-20">
-          <FeatureGrid />
-        </div>
         <AiSection />
       </main>
 
