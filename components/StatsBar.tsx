@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import GeneratedImage from './GeneratedImage';
 
-// Sub-component to handle individual breed logic and image fallbacks safely
+// Sub-component to handle individual breed logic
 const BreedItem = ({ breed, index, isMobileRight, isMobileBottom, isDesktopRight, isDesktopBottom }: any) => {
-    const [imageError, setImageError] = useState(false);
-
+    // Removed onError state to force browser to try loading the user's custom image
+    
     return (
         <div 
             className={`
@@ -20,13 +20,12 @@ const BreedItem = ({ breed, index, isMobileRight, isMobileBottom, isDesktopRight
         >
             {/* Image container */}
             <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100">
-                {/* Logic: If customImage exists AND hasn't errored, try to show it. Otherwise show GeneratedImage (Unsplash fallback). */}
-                {breed.customImage && !imageError ? (
+                {/* Logic: Strictly use customImage if available. No automatic fallback to GeneratedImage on error. */}
+                {breed.customImage ? (
                     <img 
                         src={breed.customImage}
                         alt={breed.name}
                         className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                        onError={() => setImageError(true)} 
                     />
                 ) : (
                     <GeneratedImage 
@@ -63,7 +62,7 @@ const BreedItem = ({ breed, index, isMobileRight, isMobileBottom, isDesktopRight
 };
 
 const StatsBar: React.FC = () => {
-    // 6 Scents Collection based on user provided images
+    // 6 Scents Collection - linking strictly to public/*.png files
     const breeds = [
         {
             id: 1,
@@ -87,7 +86,7 @@ const StatsBar: React.FC = () => {
             country: "Scotland",
             scent: "Golden Amber / Oat",
             prompt: "Golden Retriever",
-            customImage: "/golden01.png" // Already exists
+            customImage: "/golden01.png"
         },
         {
             id: 4,
