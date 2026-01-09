@@ -1,0 +1,7 @@
+{
+  "name": "fup - Simple Edge, Deep Scent",
+  "description": "Premium diffuser brand 'fup'. Homage to Chanel, Monochromatic Design, and Deep Scents.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
